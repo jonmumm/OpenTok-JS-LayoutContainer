@@ -1,0 +1,4 @@
+OpenTok LayoutContainer is a JavaScript class for managing the layout of video streams using the OpenTokAPI.
+
+For an explanation on the class and an example of how to use it, visit the OpenTok developer's blog post here:
+http://www.tokbox.com/developersblog/?p=477
