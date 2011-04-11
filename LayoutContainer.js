@@ -27,13 +27,16 @@ var LayoutContainer = function() {
 		 * Updates the container to incorporate any added or removed streams.
 		 */
 		layout: function(){
+			// Set the size of the container
 			var subscriberBox = document.getElementById(containerId);
 			subscriberBox.style.position = "relative";
 			subscriberBox.style.width = Width + "px";
 			subscriberBox.style.height = Height + "px";
+			
+			// Aspect ratio of the streams
 			var vid_ratio = 3/4;
 
-			// Find ideal ratio
+			// Finds the ideal number of columns and rows to minimize the amount of wasted space
 			var count = subscriberBox.children.length;
 			var min_diff;
 			var targetCols;
@@ -51,6 +54,7 @@ var LayoutContainer = function() {
 				}
 			};
 
+			
 			var videos_ratio = (targetRows/targetCols) * vid_ratio;
 
 			if (videos_ratio > availableRatio) {
@@ -68,6 +72,7 @@ var LayoutContainer = function() {
 			var firstRowMarginTop = ((Height - (targetRows * targetHeight)) / 2);
 			var firstColMarginLeft = ((Width - (targetCols * targetWidth)) / 2);
 			
+			// Loop through each stream in the container and place it inside
 			var x = 0;
 			var y = 0;
 			for (i=0; i < subscriberBox.children.length; i++) {
@@ -83,23 +88,31 @@ var LayoutContainer = function() {
 				var parent = subscriberBox.children[i];
 				var child = subscriberBox.children[i].firstChild;
 				
-				parent.style.position = "absolute";
+				// All streams placed in absolute position relative to the layout container
+				parent.style.position = "absolute"; 
+				
+				// Set position and size of the stream container
 				parent.style.left = x + "px";
 				parent.style.top = y + "px";
-				
-				child.width = targetWidth;
-				child.height = targetHeight;
-				
 				parent.style.width = targetWidth + "px";
 				parent.style.height = targetHeight + "px";
+				
+				// Set the height and width of the flash object (stream) that sits in the contaienr
+				child.width = targetWidth;
+				child.height = targetHeight;
 			};
 		},
 		/**
 		 * Adds a stream to the layout container
-		 * @param {String} divId The ID of the DIV container that is passed to session.subscribe()
+		 * @param {String} divId The ID of the DIV container that is passed to session.subscribe() or session.publish()
+		 * @param {bool} publisher True if the stream divId being passed in is a publisher.  False if the stream divId is a subscriber.
 		 */
-		addStream: function(divId) {
+		addStream: function(divId, publisher) {
 			var container = document.createElement("div");
+			if (publisher) {
+				// Put the publisher object in front to allow clicking permissions dialog
+				container.style.zIndex = 10;	
+			}
 			var div = document.createElement("div");
 			div.setAttribute('id', divId);
 			container.appendChild(div);
@@ -113,6 +126,7 @@ var LayoutContainer = function() {
 		 * @param {String} subscriberId The ID of the subscriber object from the stream to be removed.
 		 */
 		removeStream: function(subscriberId) {
+			// Gets the container that holds the flash object (stream) and removes it from the page
 			var obj = document.getElementById(subscriberId);
 			var container = obj.parentNode;
 			container.parentNode.removeChild(container);
