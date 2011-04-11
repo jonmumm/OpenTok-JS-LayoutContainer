@@ -113,11 +113,16 @@
 		}
 		
 		function subscribeToStreams(streams) {
+			// For each stream
 			for (var i = 0; i < streams.length; i++) {
-				// Check if this is the stream that I am publishing, and if so do not publish.
+				// Check if this is the stream that I am publishing, and if so do not subscribe.
 				if (streams[i].connection.connectionId != session.connection.connectionId) {
+					// Make a unique div id for this stream
 					var divId = 'stream_' + streams[i].streamId;
-					LayoutContainer.addStream(divId, false);					
+
+					// Pass in FALSE since this is a subscriber
+					LayoutContainer.addStream(divId, false);
+
 					session.subscribe(streams[i], divId);				
 				}
 			}
