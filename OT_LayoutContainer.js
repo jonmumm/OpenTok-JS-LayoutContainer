@@ -1,5 +1,5 @@
 /** @namespace Holds functionality for automatically managing the layout of OpenTok streams */
-var LayoutContainer = function() {
+var OT_LayoutContainer = function() {
 	/** @private */
 	var Width;
 	
@@ -9,7 +9,7 @@ var LayoutContainer = function() {
 	/** @private */
 	var containerId;	
 	
-	/** @scope LayoutContainer */
+	/** @scope OT_LayoutContainer */
 	return {
 		/**
 		 * Initializes the LayoutContainer.  Must be called prior to any other functions.

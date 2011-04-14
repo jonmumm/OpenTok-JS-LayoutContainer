@@ -1,12 +1,11 @@
-
 <html lang="en"> 
 <head> 
 	<meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
-	<title>OpenTok LayoutContainer.js Example</title> 
+	<title>OpenTok OT_LayoutContainer.js Example</title> 
 	<script src="http://staging.tokbox.com/v0.91/js/TB.min.js" type="text/javascript" charset="utf-8"></script> 
-    <script src="LayoutContainer.js" type="text/javascript" charset="utf-8"></script> 
+    <script src="OT_LayoutContainer.js" type="text/javascript" charset="utf-8"></script> 
 	<script type="text/javascript" charset="utf-8"> 
-		var apiKey = 413302; // OpenTok sample API key. Replace with your own API key.
+		var apiKey = 1127; // OpenTok sample API key. Replace with your own API key.
 		var sessionId = '287a9e4ad0aa8e501309df11fe53831452fa1167'; // Replace with your session ID.
 		var token = 'devtoken'; // Should not be hard-coded.
 								// Add to the page using the OpenTok server-side libraries.
@@ -30,7 +29,7 @@
 			session.addEventListener('streamDestroyed', streamDestroyedHandler);
 			
 			// Initialize the layout container
-			LayoutContainer.init("streamContainer", 500, 340); 
+			OT_LayoutContainer.init("streamContainer", 500, 340); 
 		}
  
 		//--------------------------------------
@@ -62,7 +61,7 @@
 			subscribeToStreams(event.streams);
 						
 			// Re-layout the container with the new streams
-			LayoutContainer.layout();
+			OT_LayoutContainer.layout();
 		}
  
 		function streamCreatedHandler(event) {
@@ -70,7 +69,7 @@
 			subscribeToStreams(event.streams);
 			
 			// Re-layout the container with the new streams
-			LayoutContainer.layout();
+			OT_LayoutContainer.layout();
 		}
  
 		function streamDestroyedHandler(event) {	
@@ -80,12 +79,12 @@
 				var subscribers = session.getSubscribersForStream(event.streams[i]);
 				for (var j = 0; j < subscribers.length; j++) {
 					// Then remove each stream
-					LayoutContainer.removeStream(subscribers[j].id);
+					OT_LayoutContainer.removeStream(subscribers[j].id);
 				}
 			}
 			
 			// Re-layout the container without the removed streams
-			LayoutContainer.layout();
+			OT_LayoutContainer.layout();
 	
 		}
  
@@ -107,17 +106,22 @@
 			var divId = 'opentok_publisher';
 			
 			// Pass in TRUE since this is a publisher
-			LayoutContainer.addStream(divId, true);
+			OT_LayoutContainer.addStream(divId, true);
 			
 			session.publish(divId);
 		}
 		
 		function subscribeToStreams(streams) {
+			// For each stream
 			for (var i = 0; i < streams.length; i++) {
-				// Check if this is the stream that I am publishing, and if so do not publish.
+				// Check if this is the stream that I am publishing, and if so do not subscribe.
 				if (streams[i].connection.connectionId != session.connection.connectionId) {
+					// Make a unique div id for this stream
 					var divId = 'stream_' + streams[i].streamId;
-					LayoutContainer.addStream(divId, false);					
+
+					// Pass in FALSE since this is a subscriber
+					OT_LayoutContainer.addStream(divId, false);
+
 					session.subscribe(streams[i], divId);				
 				}
 			}
@@ -126,7 +130,7 @@
 	</script> 
 </head> 
 <body> 
-	<h1>OpenTok LayoutContainer.js Example</h1>
+	<h1>OpenTok OT_LayoutContainer.js Example</h1>
 	<div>
     	<p>The LayoutContainer class optimizes the layout of streams to fit within a specified area.  To see this in action, press Connect and then copy and paste this url into a new browser tab and Connect again to see the streams dynamically resize as more are added and removed.</p>
     </div>
