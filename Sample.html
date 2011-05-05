@@ -10,6 +10,8 @@
 		var token = 'devtoken'; // Should not be hard-coded.
 								// Add to the page using the OpenTok server-side libraries.
 		var session;
+		
+		var accessEntered = false;
  
 		// Un-comment either of the following to set automatic logging and exception handling.
 		// See the exceptionHandler() method below.
@@ -59,9 +61,6 @@
 			
 			// Subscribe to all streams currently in the Session
 			subscribeToStreams(event.streams);
-						
-			// Re-layout the container with the new streams
-			OT_LayoutContainer.layout();
 		}
  
 		function streamCreatedHandler(event) {
@@ -69,7 +68,9 @@
 			subscribeToStreams(event.streams);
 			
 			// Re-layout the container with the new streams
-			OT_LayoutContainer.layout();
+			if (accessEntered) {
+				OT_LayoutContainer.layout();
+			}
 		}
  
 		function streamDestroyedHandler(event) {	
@@ -84,7 +85,9 @@
 			}
 			
 			// Re-layout the container without the removed streams
-			OT_LayoutContainer.layout();
+			if (accessEntered) {
+				OT_LayoutContainer.layout();
+			}
 	
 		}
  
@@ -108,7 +111,23 @@
 			// Pass in TRUE since this is a publisher
 			OT_LayoutContainer.addStream(divId, true);
 			
-			session.publish(divId);
+			var publisher = session.publish(divId);
+			publisher.addEventListener("accessAllowed", accessAllowedHandler);
+			publisher.addEventListener("accessDenied", accessDeniedHandler);
+		}
+		
+		function accessAllowedHandler() {
+			accessEntered = true;
+			
+			OT_LayoutContainer.layout();
+		}
+		
+		function accessDeniedHandler() {
+			accessEntered = true;
+			
+			OT_LayoutContainer.removeStream('opentok_publisher');
+			
+			OT_LayoutContainer.layout();
 		}
 		
 		function subscribeToStreams(streams) {
